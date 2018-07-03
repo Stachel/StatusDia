@@ -1,0 +1,61 @@
+            // create a network
+            var container = document.getElementById('mynetwork');
+var data = {
+        nodes: nodes,
+        edges: edges
+      };
+
+
+            var options = {
+                nodes: {
+                            shape: 'box',
+                            color: {background:'white',border:'black'},
+                            font: {
+                                size: 12
+                            },
+                            borderWidth: 1
+                        },
+                layout: {
+                    hierarchical: {
+                        direction: "LR",
+                        sortMethod: "hubsize"
+                    }
+                },
+                interaction: {dragNodes :true},
+                physics: {
+                    enabled: true
+                },
+                edges: {
+                          smooth: false,
+                          arrows: {to : true },
+                        color:{color:'gray', highlight:'black'},
+                        chosen: { label: true}
+                        },
+            };
+            network = new vis.Network(container, data, options);
+
+            network.on('select', function (params) {
+                            var id = params.nodes[0];
+                            var arr = network.getConnectedNodes(id);
+                            for (var i = 0; i < network.body.data.nodes.length; i++) {
+                                var node = network.body.nodes[i];
+                                if (arr.includes(node.id)) {
+                                    node.options.color.background="yellow";
+                                } else {
+                                node.options.color.background="white";
+                                }
+                            }
+                        });
+        }
+
+    </script>
+    
+</head>
+
+<body onload="draw();">
+
+<div id="mynetwork"></div>
+
+
+</body>
+</html>

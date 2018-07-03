@@ -1,0 +1,18 @@
+<tr>
+    <td width="50px">
+        %s
+    </td>
+    <td>
+        <div>%s</div>
+        <div class="header">%s</div>
+        <div>ID: %s &emsp; GUID: %s</div>
+    </td>
+    <td>
+        <div>%s</div>
+        <div class="header">%s</div>
+        <div>ID: %s &emsp; GUID: %s</div>
+     </td>
+     <td>
+        %s
+    </td>
+</tr>

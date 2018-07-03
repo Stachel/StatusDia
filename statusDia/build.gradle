@@ -1,0 +1,58 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = "ru.cdc.statusdia.StatusDiaApplication"
+sourceCompatibility = 1.8
+version '1.0'
+
+repositories {
+    mavenCentral()
+    jcenter()
+    mavenLocal()
+    maven {
+        url "http://cdcs17:8081/repository/internal"
+    }
+}
+
+dependencies {
+    compile fileTree(dir: '../libs', include: ['*.jar'])
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDirs "src/main/resources"
+        }
+    }
+}
+
+jar {
+    /*def versionGps = "1.0"
+    configurations.compile.resolvedConfiguration.firstLevelModuleDependencies.each {
+       if (it.moduleName.contains("gpscore-jar")) {
+            versionGps = it.moduleVersion
+        }
+    }
+*/
+    manifest {
+        attributes 'Implementation-Title': 'Status Dia',
+                'Implementation-Version': 1.0,
+                'Main-Class': mainClassName
+    }
+    baseName = project.name
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
+task copyJar(type: Copy) {
+    from 'build/libs/statusDia-1.0.jar'
+    into '../jar'
+    rename ('statusDia-1.0.jar', 'statusDia.jar')
+}
+
+task copyDefault(type: Copy) {
+    from 'src/main/resources/default'
+    into '../jar'
+}
+
+jar.finalizedBy(copyJar)
+copyJar.finalizedBy(copyDefault)

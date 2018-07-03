@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Status Links</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <style>
+            body {
+                font-family:monospace;
+            }
+		   table {
+			width: 100%;
+			border: 1px black;
+			border-collapse: collapse;
+		   }
+		   th {
+			text-align: left;
+			background: #ccc;
+			padding: 5px;
+			border: 1px solid black;
+		   }
+		   td {
+			padding: 5px;
+			border: 1px solid black;
+			vertical-align:top;
+		   }
+		   ul {
+             display: inherit;
+           }
+		   .header {
+            font-weight:bold;
+		   }
+		   .condHeader {
+            text-decoration: underline;
+           }
+		 </style>
+
+</head>
+
+<body>
+
+<table>
