@@ -1,9 +1,6 @@
 package ru.cdc.statusdia.core;
 
-import ru.cdc.statusdia.core.model.LinkCondition;
-import ru.cdc.statusdia.core.model.StatusLink;
-import ru.cdc.statusdia.core.model.StatusNode;
-import ru.cdc.statusdia.core.model.StatusStep;
+import ru.cdc.statusdia.core.model.*;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -21,7 +18,8 @@ public class Visualizer {
     private String diaEnd;
     private String statusStart;
     private String statusEnd;
-    private String statusLine;
+    private String statusRouteLine;
+    private String statusDocLine;
 
 
     public Visualizer() {
@@ -35,7 +33,8 @@ public class Visualizer {
 
         statusStart = readFile("html/template_status_start.txt");
         statusEnd = readFile("html/template_status_end.txt");
-        statusLine = readFile("html/template_status_line.txt");
+        statusRouteLine = readFile("html/template_status_route_line.txt");
+        statusDocLine = readFile("html/template_status_doc_line.txt");
     }
 
 
@@ -127,14 +126,27 @@ public class Visualizer {
         return sb.toString();
     }
 
-    public void writeStepsToHtmlFile(String filename, ArrayList<StatusStep> steps, ArrayList<StatusLink> links) {
+    public void writeStepsToHtmlFile(String filename, ArrayList<StatusStep> steps, ArrayList<StatusLink> links,
+                                     HashMap<Integer, ArrayList<StatusAttr>> docStatuses, boolean isRoute) {
         BufferedWriter fs = null;
         try {
             fs = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), "UTF-8"));
             fs.append(statusStart);
 
+            // create map and sorted array
+            HashMap<StatusNode, ArrayList<StatusStep>> map = new HashMap<>();
+            ArrayList<StatusNode> keySet = new ArrayList<>();
             for (StatusStep step : steps) {
-                appendStepLine(fs, step);
+                StatusNode parent = step.getParent();
+                if (map.containsKey(parent) == false) {
+                    map.put(parent, new ArrayList<>());
+                    keySet.add(parent);
+                }
+                map.get(parent).add(step);
+            }
+
+            for (StatusNode parent : keySet) {
+                appendStepLine(fs, map.get(parent), links, docStatuses, isRoute);
             }
 
             fs.append(statusEnd);
@@ -152,17 +164,78 @@ public class Visualizer {
         }
     }
 
-    private void appendStepLine(BufferedWriter fs, StatusStep step) throws IOException {
+    private HashMap<StatusNode, ArrayList<StatusStep>> createStatusMap(ArrayList<StatusStep> steps) {
+        HashMap<StatusNode, ArrayList<StatusStep>> map = new HashMap<>();
 
-        fs.append(String.format(statusLine,
-                step.getStatusType(),
-                step.isAuto() ? "A" : "",
-                step.getPlaceType(),
-                step.getParent().getHtml(),
-                step.getChild().getHtml(),
-                step.getParams(),
-                "автопереходы"
-        ));
+        for (StatusStep step : steps) {
+            StatusNode parent = step.getParent();
+            if (map.containsKey(parent) == false) {
+                map.put(parent, new ArrayList<>());
+            }
+            map.get(parent).add(step);
+        }
+
+        return map;
+    }
+
+    private void appendStepLine(BufferedWriter fs, ArrayList<StatusStep> steps, ArrayList<StatusLink> links, HashMap<Integer, ArrayList<StatusAttr>> docStatuses, boolean isRoute) throws IOException {
+
+        boolean isFirst = true;
+        for (StatusStep step : steps) {
+            String parentTr = "";
+            if (isFirst) {
+                parentTr = String.format("<td rowspan='%d'><div>%s</div></td>", steps.size(), step.getParent().getHtml());
+                isFirst = false;
+            }
+
+            String autoLinks = getLinksForChild(links, step.getChild());
+
+
+
+            if (isRoute) {
+                fs.append(String.format(statusRouteLine,
+                        parentTr,
+                        step.getStatusType(),
+                        step.isAuto() ? "A" : "",
+                        step.getChild().getHtml(),
+                        autoLinks
+                ));
+            } else {
+                StringBuffer params = new StringBuffer();
+                params.append(step.getParams());
+                int id = step.getChild().getId();
+                if (docStatuses.containsKey(id)) {
+                    for (StatusAttr sa : docStatuses.get(id)) {
+                        params.append(sa.getValue());
+                    }
+                }
+
+
+                fs.append(String.format(statusDocLine,
+                        parentTr,
+                        step.getStatusType(),
+                        step.isAuto() ? "A" : "",
+                        step.getPlaceType(),
+                        step.getChild().getHtml(),
+                        params.toString(),
+                        autoLinks
+                ));
+            }
+        }
+    }
+
+    private String getLinksForChild(ArrayList<StatusLink> links, StatusNode child) {
+        StringBuffer sb = new StringBuffer();
+
+        for (StatusLink link : links) {
+            if (link.forNode(child)) {
+                sb.append("<li>");
+                sb.append(String.format("%s<br/>%s", link.getType2(), link.getStatus2()));
+                sb.append("</li>");
+            }
+        }
+
+        return sb.toString();
     }
 
     public void writeDiaToHtmlFile(String filename, ArrayList<StatusStep> steps) {

@@ -1,0 +1,13 @@
+<tr>
+    %s
+    <td width="10px" class="status %s">
+        %s
+    </td>
+
+    <td>
+        <div>%s</div>
+    </td>
+    <td>
+        <ul>%s</ul>
+    </td>
+</tr>

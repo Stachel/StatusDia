@@ -5,9 +5,11 @@ import ru.cdc.statusdia.core.Logger;
 import ru.cdc.statusdia.core.Utils;
 import ru.cdc.statusdia.core.Visualizer;
 import ru.cdc.statusdia.core.loaders.LinkConditionLoader;
+import ru.cdc.statusdia.core.loaders.StatusAttrLoader;
 import ru.cdc.statusdia.core.loaders.StatusLinkLoader;
 import ru.cdc.statusdia.core.loaders.StatusStepLoader;
 import ru.cdc.statusdia.core.model.LinkCondition;
+import ru.cdc.statusdia.core.model.StatusAttr;
 import ru.cdc.statusdia.core.model.StatusLink;
 import ru.cdc.statusdia.core.model.StatusStep;
 
@@ -56,6 +58,7 @@ public class StatusDiaApplication {
         ArrayList<StatusLink> links = StatusLinkLoader.loadStatusLink();
         HashMap<Integer, ArrayList<LinkCondition>> conds = LinkConditionLoader.loadLinkCondition();
         HashMap<Integer, ArrayList<StatusStep>> status = StatusStepLoader.loadStatusStep();
+        HashMap<Integer, ArrayList<StatusAttr>> docStatuses = StatusAttrLoader.loadStatusAttr();
 
         Visualizer visualizer = new Visualizer();
 
@@ -74,7 +77,7 @@ public class StatusDiaApplication {
         // Status dia
         for (Integer type : status.keySet()) {
             File linkFile = new File(type > 1000 ? "route.html" : "doc_" + type + ".html");
-            visualizer.writeStepsToHtmlFile(linkFile.getAbsolutePath(), status.get(type), links);
+            visualizer.writeStepsToHtmlFile(linkFile.getAbsolutePath(), status.get(type), links,  docStatuses, type > 1000);
         }
 
         Logger.info(TAG, "done");

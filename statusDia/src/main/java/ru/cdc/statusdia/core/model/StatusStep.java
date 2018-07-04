@@ -15,14 +15,12 @@ public class StatusStep {
     private int _isNegative;
     private int _isNavigation;
     private int _isScan;
-    private int _isOpenVisit;
-    private int _isCloseVisit;
 
     private StatusNode _parent, _child;
 
 
     public StatusStep(int objectTypeId, int parentGUID, int parentID, String parentName, int childGUID, int childID, String childName,
-                      int userType, int faceType, int isPositive, int isNegative, int isNavigation, int isScan, int openVisit, int closeVisit) {
+                      int userType, int faceType, int isPositive, int isNegative, int isNavigation, int isScan) {
         _objectTypeId = objectTypeId;
         _parentGUID = parentGUID;
         _parentID = parentID;
@@ -36,8 +34,6 @@ public class StatusStep {
         _isNegative = isNegative;
         _isNavigation = isNavigation;
         _isScan = isScan;
-        _isOpenVisit = openVisit;
-        _isCloseVisit = closeVisit;
     }
 
     public int getTypeID() {
@@ -102,20 +98,6 @@ public class StatusStep {
         return (_userType & 4) == 0;
     }
 
-    public String getStatusParams() {
-        StringBuffer sb = new StringBuffer();
-        if ((_userType & 4) == 0) {
-            sb.append("A");
-        }
-        if (_isNavigation > 0) {
-            sb.append("N");
-        }
-        if (_isScan > 0) {
-            sb.append("S");
-        }
-        return sb.toString();
-    }
-
     public String getPlaceType() {
         if (_faceType == 5200001) {
             return "Визит";
@@ -127,20 +109,13 @@ public class StatusStep {
     }
 
     public String getParams() {
-        StringBuffer sb = new StringBuffer("<ul>");
-        if (_isOpenVisit > 0) {
-            sb.append("<li>Начало визита</li>");
-        }
-        if (_isCloseVisit > 0) {
-            sb.append("<li>Завершение визита</li>");
-        }
+        StringBuffer sb = new StringBuffer();
         if (_isNavigation > 0) {
             sb.append("<li>Навигатор</li>");
         }
         if (_isScan > 0) {
             sb.append("<li>Сканирование штрих-кода</li>");
         }
-        sb.append("</ul>");
         return sb.toString();
     }
 }

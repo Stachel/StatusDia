@@ -1,8 +1,6 @@
 <tr>
-    <td width="20px" class="status %s">
-        %s
-    </td>
-    <td>
+    %s
+    <td width="10px" class="status %s">
         %s
     </td>
     <td>
@@ -12,9 +10,9 @@
         <div>%s</div>
     </td>
     <td>
-        %s
+        <ul>%s</ul>
     </td>
     <td>
-        %s
+        <ul>%s</ul>
     </td>
 </tr>

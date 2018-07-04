@@ -90,4 +90,8 @@ public class StatusLink {
     public int getRecordID2() {
         return _recordID2;
     }
+
+    public boolean forNode(StatusNode child) {
+        return _recordID1 == child.getGuid() && _statusID1 == child.getId();
+    }
 }

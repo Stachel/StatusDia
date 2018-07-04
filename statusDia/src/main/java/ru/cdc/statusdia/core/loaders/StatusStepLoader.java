@@ -27,14 +27,11 @@ public class StatusStepLoader {
 
             ResultSet c = connection.createStatement().executeQuery("select wa.ObjectTypeId, step.ParentRecordID, step.ParentStatusID, ifnull(av1.AttrValueName, '-'), " +
                     "step.ChildRecordID, step.ChildStatusID, av2.AttrValueName, " +
-                    "step.UserType, step.FaceType, step.isPositive, step.isNegative, step.Navigation, step.Scan, " +
-                    "ifnull(oa1.AttrText, 0) as startVisit, ifnull(oa2.AttrText, 0) as endVisit " +
+                    "step.UserType, step.FaceType, step.isPositive, step.isNegative, step.Navigation, step.Scan " +
                     "from DS_ActivitiesSteps step " +
                     "left join DS_WorkflowsActivities wa on wa.ActivityID = step.ActivityID " +
                     "left join DS_AttributesValues av1 on av1.AttrValueID = step.ParentStatusID and av1.attrID in (1727, 1104) " +
                     "left join DS_AttributesValues av2 on av2.AttrValueID = step.ChildStatusID and av2.attrID in (1727, 1104) " +
-                    "left join DS_ObjectsAttributes oa1 on oa1.ID = step.ChildStatusID and oa1.attrID = 4166 " +
-                    "left join DS_ObjectsAttributes oa2 on oa2.ID = step.ChildStatusID and oa2.attrID = 4115 " +
                     "order by step.ParentRecordID, step.ParentStatusID");
 
             while (c.next()) {
@@ -52,9 +49,7 @@ public class StatusStepLoader {
                         c.getInt(10),
                         c.getInt(11),
                         c.getInt(12),
-                        c.getInt(13),
-                        c.getInt(14),
-                        c.getInt(15)
+                        c.getInt(13)
                 );
 
                 if (list.containsKey(typeid) == false) {

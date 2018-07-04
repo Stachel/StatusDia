@@ -1,6 +1,6 @@
 package ru.cdc.statusdia.core.model;
 
-public class StatusNode {
+public class StatusNode implements Comparable<StatusNode> {
 
     private int _typeId;
     private int _guid;
@@ -12,6 +12,11 @@ public class StatusNode {
         _guid = guid;
         _id = id;
         _name = name;
+    }
+
+    @Override
+    public int hashCode() {
+        return _guid + (_id * 17);
     }
 
     @Override
@@ -31,5 +36,24 @@ public class StatusNode {
 
     public String getHtml() {
         return String.format("<div class=\"header\">%s</div><div>ID: %s &emsp; GUID: %s</div>", _name, _id, _guid );
+    }
+
+    @Override
+    public int compareTo(StatusNode statusNode) {
+        if (statusNode._id == _id) return 0;
+        if (statusNode._id < _id) return -1;
+        return 1;
+    }
+
+    public int getTypeId() {
+        return _typeId;
+    }
+
+    public int getGuid() {
+        return _guid;
+    }
+
+    public int getId() {
+        return _id;
     }
 }
