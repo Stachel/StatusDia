@@ -145,8 +145,53 @@ public class Visualizer {
                 map.get(parent).add(step);
             }
 
+
             for (StatusNode parent : keySet) {
-                appendStepLine(fs, map.get(parent), links, docStatuses, isRoute);
+
+                ArrayList<StatusStep> stepsForParent = map.get(parent);
+
+                boolean isFirst = true;
+                for (StatusStep step : stepsForParent) {
+                    String parentTr = "";
+                    if (isFirst) {
+                        parentTr = String.format("<td rowspan='%d'><div>%s</div></td>", stepsForParent.size(), step.getParent().getHtml(keySet.indexOf(parent)));
+                        isFirst = false;
+                    }
+
+                    String autoLinks = getLinksForChild(links, step.getChild());
+
+
+
+                    if (isRoute) {
+                        fs.append(String.format(statusRouteLine,
+                                parentTr,
+                                step.getStatusType(),
+                                step.isAuto() ? "A" : "",
+                                step.getChild().getHtml(keySet.indexOf(step.getChild())),
+                                autoLinks
+                        ));
+                    } else {
+                        StringBuffer params = new StringBuffer();
+                        params.append(step.getParams());
+                        int id = step.getChild().getId();
+                        if (docStatuses.containsKey(id)) {
+                            for (StatusAttr sa : docStatuses.get(id)) {
+                                params.append(sa.getValue());
+                            }
+                        }
+
+
+                        fs.append(String.format(statusDocLine,
+                                parentTr,
+                                step.getStatusType(),
+                                step.isAuto() ? "A" : "",
+                                step.getPlaceType(),
+                                step.getChild().getHtml(keySet.indexOf(step.getChild())),
+                                params.toString(),
+                                autoLinks
+                        ));
+                    }
+                }
             }
 
             fs.append(statusEnd);
@@ -176,52 +221,6 @@ public class Visualizer {
         }
 
         return map;
-    }
-
-    private void appendStepLine(BufferedWriter fs, ArrayList<StatusStep> steps, ArrayList<StatusLink> links, HashMap<Integer, ArrayList<StatusAttr>> docStatuses, boolean isRoute) throws IOException {
-
-        boolean isFirst = true;
-        for (StatusStep step : steps) {
-            String parentTr = "";
-            if (isFirst) {
-                parentTr = String.format("<td rowspan='%d'><div>%s</div></td>", steps.size(), step.getParent().getHtml());
-                isFirst = false;
-            }
-
-            String autoLinks = getLinksForChild(links, step.getChild());
-
-
-
-            if (isRoute) {
-                fs.append(String.format(statusRouteLine,
-                        parentTr,
-                        step.getStatusType(),
-                        step.isAuto() ? "A" : "",
-                        step.getChild().getHtml(),
-                        autoLinks
-                ));
-            } else {
-                StringBuffer params = new StringBuffer();
-                params.append(step.getParams());
-                int id = step.getChild().getId();
-                if (docStatuses.containsKey(id)) {
-                    for (StatusAttr sa : docStatuses.get(id)) {
-                        params.append(sa.getValue());
-                    }
-                }
-
-
-                fs.append(String.format(statusDocLine,
-                        parentTr,
-                        step.getStatusType(),
-                        step.isAuto() ? "A" : "",
-                        step.getPlaceType(),
-                        step.getChild().getHtml(),
-                        params.toString(),
-                        autoLinks
-                ));
-            }
-        }
     }
 
     private String getLinksForChild(ArrayList<StatusLink> links, StatusNode child) {

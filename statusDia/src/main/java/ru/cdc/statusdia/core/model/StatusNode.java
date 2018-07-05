@@ -34,8 +34,12 @@ public class StatusNode implements Comparable<StatusNode> {
         return String.format("{ id: %d, font: { multi: true }, widthConstraint: 120, label: '<b>%s</b> \\n ID:%d GUID:%d' }, ", index, _name, _id, _guid );
     }
 
-    public String getHtml() {
-        return String.format("<div class=\"header\">%s</div><div>ID: %s &emsp; GUID: %s</div>", _name, _id, _guid );
+    public String getHtml(int index) {
+        index++;
+        if (index > 0) {
+            return String.format("<div class=\"header\">%d. %s</div><div>ID: %s &emsp; GUID: %s</div>", index, _name, _id, _guid);
+        }
+        return String.format("<div class=\"header\">%s</div><div>ID: %s &emsp; GUID: %s</div>", _name, _id, _guid);
     }
 
     @Override
