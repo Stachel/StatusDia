@@ -1,5 +1,7 @@
 package ru.cdc.statusdia.core.model;
 
+import ru.cdc.statusdia.core.Utils;
+
 public class LinkCondition {
 
     private int _linkId;
@@ -25,11 +27,11 @@ public class LinkCondition {
     private String getTypeName() {
         switch (_typeId) {
             case 2830013:
-                return "Тип документа";
+                return Utils.encode("Тип документа");
             case 40000093:
-                return "Статус документа";
+                return Utils.encode("Статус документа");
             case 40000943:
-                return "Группировка";
+                return Utils.encode("Группировка");
         }
         return "?";
     }

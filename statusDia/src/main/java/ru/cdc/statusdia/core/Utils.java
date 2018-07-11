@@ -2,6 +2,7 @@ package ru.cdc.statusdia.core;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -167,6 +168,14 @@ public class Utils {
         }
 
         return builder.toString();
+    }
+
+    public static String encode(String str) {
+        try {
+            String v = new String(str.getBytes(), Charset.forName("UTF-8"));
+            return new String(v);
+        } catch (Exception e) {}
+        return "";
     }
 
 }

@@ -1,5 +1,7 @@
 package ru.cdc.statusdia.core.model;
 
+import ru.cdc.statusdia.core.Utils;
+
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -45,7 +47,7 @@ public class StatusLink {
 
     public String getType1() {
         if (_dictID1 == 20) {
-            return "Маршрут";
+            return Utils.encode("Маршрут");
         }
         StringBuffer sb = new StringBuffer();
         sb.append(_docType1);
@@ -69,7 +71,7 @@ public class StatusLink {
 
     public String getType2() {
         if (_dictID2 == 20) {
-            return "Маршрут";
+            return Utils.encode("Маршрут");
         }
         StringBuffer sb = new StringBuffer();
         sb.append(_docType2);

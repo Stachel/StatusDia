@@ -1,5 +1,11 @@
 package ru.cdc.statusdia.core.model;
 
+import ru.cdc.statusdia.core.Utils;
+
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
 public class StatusStep {
 
     private int _objectTypeId;
@@ -62,23 +68,6 @@ public class StatusStep {
             sb.append(", dashes:true");
         }
 
-       /* if (_isNegative > 0) {
-            sb.append(", color:{color:'red', highlight:'darkred'}");
-        }
-
-        if (_isPositive > 0) {
-            sb.append(", color:{color:'green', highlight:'darkgreen'}");
-        }
-
-        sb.append(", label: '");
-        if (_isNavigation > 0) {
-            sb.append("N");
-        }
-        if (_isScan > 0) {
-            sb.append("S");
-        }
-        sb.append("'");*/
-
         sb.append("},\n");
 
         return sb.toString();
@@ -100,10 +89,10 @@ public class StatusStep {
 
     public String getPlaceType() {
         if (_faceType == 5200001) {
-            return "Визит";
+            return Utils.encode("Визит");
         }
         if (_faceType == 5200004) {
-            return "Склад";
+            return Utils.encode("Склад");
         }
         return "";
     }
@@ -111,10 +100,10 @@ public class StatusStep {
     public String getParams() {
         StringBuffer sb = new StringBuffer();
         if (_isNavigation > 0) {
-            sb.append("<li>Навигатор</li>");
+            sb.append(Utils.encode("<li>Навигатор</li>"));
         }
         if (_isScan > 0) {
-            sb.append("<li>Сканирование штрих-кода</li>");
+            sb.append(Utils.encode("<li>Сканирование штрих-кода</li>"));
         }
         return sb.toString();
     }

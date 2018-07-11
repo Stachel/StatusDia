@@ -104,7 +104,7 @@ public class Visualizer {
 
     private String generateConditions(ArrayList<LinkCondition> conds) {
         if (conds == null || conds.size() == 0) {
-            return "<i>нет условий</i>";
+            return Utils.encode("<i>нет условий</i>");
         }
 
         HashMap<String, StringBuffer> map = new HashMap<>();
