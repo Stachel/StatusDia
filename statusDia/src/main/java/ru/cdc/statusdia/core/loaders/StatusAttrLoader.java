@@ -11,7 +11,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class StatusAttrLoader {private static final String TAG = LinkConditionLoader.class.getSimpleName();
+public class StatusAttrLoader {
+
+    private static final String TAG = StatusAttrLoader.class.getSimpleName();
 
     public static HashMap<Integer, ArrayList<StatusAttr>> loadStatusAttr() {
         Logger.info(TAG,"loading data from DS_ObjectsAttributes");

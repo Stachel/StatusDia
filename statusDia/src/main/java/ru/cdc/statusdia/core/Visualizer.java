@@ -20,6 +20,10 @@ public class Visualizer {
     private String statusEnd;
     private String statusRouteLine;
     private String statusDocLine;
+    private String secondStart;
+    private String secondEnd;
+    private String secondLine;
+
 
 
     public Visualizer() {
@@ -35,6 +39,10 @@ public class Visualizer {
         statusEnd = readFile("html/template_status_end.txt");
         statusRouteLine = readFile("html/template_status_route_line.txt");
         statusDocLine = readFile("html/template_status_doc_line.txt");
+
+        secondStart = readFile("html/template_second_start.txt");
+        secondEnd = readFile("html/template_second_end.txt");
+        secondLine = readFile("html/template_second_line.txt");
     }
 
 
@@ -195,6 +203,41 @@ public class Visualizer {
             }
 
             fs.append(statusEnd);
+            fs.flush();
+        } catch (IOException e) {
+            Logger.error(TAG, e.getMessage());
+        } finally {
+            if (fs != null) {
+                try {
+                    fs.close();
+                } catch (IOException e) {
+                    Logger.error(TAG, e.getMessage());
+                }
+            }
+        }
+    }
+
+    public void writeSecondToHtmlFile(String filename, SecondStatus docType) {
+        BufferedWriter fs = null;
+        try {
+            fs = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), "UTF-8"));
+            fs.append(secondStart);
+
+            for (SecondStatus status : docType.childs()) {
+
+                StringBuffer sb = new StringBuffer();
+                for (SecondStatus st : status.childs()) {
+                    sb.append(String.format("<b>%s</b> (id: %d)</br>", st.name(), st.id()));
+                }
+
+                fs.append(String.format(secondLine,
+                                status.name(),
+                                status.id(),
+                                sb.toString()
+                        ));
+            }
+
+            fs.append(secondEnd);
             fs.flush();
         } catch (IOException e) {
             Logger.error(TAG, e.getMessage());

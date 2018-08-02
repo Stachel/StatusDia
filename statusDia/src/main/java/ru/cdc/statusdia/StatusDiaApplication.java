@@ -4,14 +4,8 @@ import org.apache.commons.cli.*;
 import ru.cdc.statusdia.core.Logger;
 import ru.cdc.statusdia.core.Utils;
 import ru.cdc.statusdia.core.Visualizer;
-import ru.cdc.statusdia.core.loaders.LinkConditionLoader;
-import ru.cdc.statusdia.core.loaders.StatusAttrLoader;
-import ru.cdc.statusdia.core.loaders.StatusLinkLoader;
-import ru.cdc.statusdia.core.loaders.StatusStepLoader;
-import ru.cdc.statusdia.core.model.LinkCondition;
-import ru.cdc.statusdia.core.model.StatusAttr;
-import ru.cdc.statusdia.core.model.StatusLink;
-import ru.cdc.statusdia.core.model.StatusStep;
+import ru.cdc.statusdia.core.loaders.*;
+import ru.cdc.statusdia.core.model.*;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -59,6 +53,7 @@ public class StatusDiaApplication {
         HashMap<Integer, ArrayList<LinkCondition>> conds = LinkConditionLoader.loadLinkCondition();
         HashMap<Integer, ArrayList<StatusStep>> status = StatusStepLoader.loadStatusStep();
         HashMap<Integer, ArrayList<StatusAttr>> docStatuses = StatusAttrLoader.loadStatusAttr();
+        HashMap<Integer, SecondStatus> secondStatuses = SecondStatusLoader.loadSecondStatus();
 
         Visualizer visualizer = new Visualizer();
 
@@ -74,10 +69,16 @@ public class StatusDiaApplication {
             visualizer.writeDiaToHtmlFile(linkFile.getAbsolutePath(), status.get(type));
         }*/
 
-        // Status dia
+        // Status table
         for (Integer type : status.keySet()) {
             File linkFile = new File(type > 1000 ? "route.html" : "doc_" + type + ".html");
             visualizer.writeStepsToHtmlFile(linkFile.getAbsolutePath(), status.get(type), links,  docStatuses, type > 1000);
+        }
+
+        // Second status table
+        for (Integer type : secondStatuses.keySet()) {
+            File linkFile = new File("second_" + type + ".html");
+            visualizer.writeSecondToHtmlFile(linkFile.getAbsolutePath(), secondStatuses.get(type));
         }
 
         Logger.info(TAG, "done");
